@@ -13,17 +13,18 @@
     "babel-preset-react": "^6.24.1",
     "eslint": "4.x",
     "eslint-plugin-flowtype": "^2.32.1",
+    "flow-bin": "^0.44.2",
     "react-dom": "^15.5.4",
     "react-hot-loader": "next",
+    "react": "^15.5.4",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   },
   "scripts": {
-    "start": "webpack-dev-server"
-  },
-  "dependencies": {
-    "react": "^15.5.4"
+    "start": "webpack-dev-server",
+    "lint": "eslint src",
+    "flow": "flow check"
   }
 }

@@ -19,6 +19,7 @@ render(App);
 
 // Hot Module Replacement API
 if (module.hot) {
+  // $FlowFixMe: (.hot is monkey patched in and flow does not know about it)
   module.hot.accept('./components/App', () => {
     render(App)
   });
