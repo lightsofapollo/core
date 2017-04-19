@@ -3,5 +3,5 @@ node_js:
   - "7"
 
 # Yarn wants us to use apt-get but it's easier to use npm for traivs ...
-before_script: "npm install -g yarn"
+before_script: ""
 script: ./ci.sh
