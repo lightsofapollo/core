@@ -11,7 +11,8 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-      {this.props.message}
+        <p>Foobar</p>
+        {this.props.message}
       </div>
     );
   }
