@@ -8,6 +8,11 @@ export default class App extends React.Component {
     message: string
   }
 
+  thisWillFooBar() {
+    return 1 + 1 + 3;
+  }
+
+
   render() {
     return (
       <div>
