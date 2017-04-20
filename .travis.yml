@@ -5,3 +5,6 @@ node_js:
 # Yarn wants us to use apt-get but it's easier to use npm for traivs ...
 before_script: ""
 script: ./ci.sh
+
+after_script:
+  - 'bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json'
