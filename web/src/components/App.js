@@ -3,10 +3,16 @@
  */
 import React from 'react';
 
-export default function() {
-  return (
-    <div>
-    Rendered foo
-    </div>
-  )
+export default class App extends React.Component {
+  props: {
+    message: string
+  }
+
+  render() {
+    return (
+      <div>
+      {this.props.message}
+      </div>
+    );
+  }
 }
