@@ -6,6 +6,4 @@
 yarn run lint
 yarn run flow
 
-pushd web
-# TODO Web specific tests...
-popd
+./node_modules/.bin/jest --coverage
