@@ -6,23 +6,30 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "babel-core": "^7.0.0-alpha.9",
-    "babel-eslint": "lightsofapollo/babel-eslint#failing-flow-spread-operator",
-    "babel-loader": "^7.0.0-beta.1",
-    "babel-plugin-transform-class-properties": "^7.0.0-alpha.9",
-    "babel-plugin-transform-object-rest-spread": "^7.0.0-alpha.9",
+    "babel-cli": "7",
+    "babel-core": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.0",
+    "babel-plugin-relay": "1.0.1-rc.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.4.0",
-    "babel-preset-react": "^7.0.0-alpha.9",
-    "eslint": "4.x",
+    "babel-preset-react": "^6.24.1",
+    "babylon": "6.17.0",
+    "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.32.1",
     "flow-bin": "^0.44.2",
-    "jest-runtime": "https://s3-us-west-2.amazonaws.com/lightsofapollo-oss/babel-7-jest-runtime.tgz",
+    "graphql": "^0.9.6",
     "jest": "^19.0.2",
+    "jest-runtime": "19.0.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-hot-loader": "next",
     "react-redux": "^5.0.4",
+    "react-relay": "1.0.0-rc.3",
     "redux": "^3.6.0",
+    "relay-compiler": "1.0.0-rc.3",
+    "relay-compiler-webpack-plugin": "git+ssh://git@github.com/lightsofapollo/relay-compiler-webpack-plugin#add-introspection-query-json",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   },
@@ -35,13 +42,11 @@
     }
   },
   "scripts": {
+    "postinstall": "rm -rf ./node_modules/relay-compiler/node_modules/babylon",
     "flow": "flow check",
     "lint": "eslint ."
   },
   "engines": {
     "node": ">=7.7"
-  },
-  "dependencies": {
-    "babel-plugin-istanbul": "^4.1.1"
   }
 }
