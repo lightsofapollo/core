@@ -1,6 +1,18 @@
 {
   "name": "core-web",
   "private": true,
+  "browser": {
+    "./src/idb.js": "./src/idb.browser.js"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./__tests__/setup.js",
+    "testMatch": [
+      "**/__tests__/**.test.js"
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
   "scripts": {
     "install": "cd ../ && yarn",
     "start": "webpack-dev-server"
