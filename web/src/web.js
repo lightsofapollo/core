@@ -3,8 +3,9 @@
  *
  * @noflow
  */
-import path from 'path';
-import { reserveTmpDir } from '../__tests__/setup';
+import { reserveTmpDir, } from '../__tests__/setup';
+import { TextEncoder, TextDecoder, } from 'text-encoding';
+import WebCrypto from 'node-webcrypto-ossl';
 
 if (process.env.NODE_ENV !== 'test') {
   throw new Error(`${__filename} should not be invoked outside of NODE_ENV=test`);
@@ -20,7 +21,9 @@ idbFactory(idb, {
 });
 
 module.exports = {
-  crypto: require('node-webcrypto-ossl'),
+  TextEncoder,
+  TextDecoder,
+  crypto: new WebCrypto(), 
   idb: {
     indexedDB: idb.indexedDB,
     IDBKeyRange: idb.IDBKeyRange,

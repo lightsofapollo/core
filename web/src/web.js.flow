@@ -9,3 +9,5 @@ type IDB = {
 
 declare export var crypto: any;
 declare export var idb: IDB;
+declare export var TextEncoder: TextEncoder;
+declare export var TextDecoder: TextDecoder;
