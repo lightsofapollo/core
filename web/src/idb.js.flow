@@ -1,6 +1,0 @@
-/**
- * @flow
- */
-
-declare export var indexedDB: IDBFactory;
-declare export var IDBKeyRange: IDBKeyRange;

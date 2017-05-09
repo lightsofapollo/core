@@ -1,0 +1,11 @@
+/**
+ * @flow
+ */
+
+type IDB = {
+  indexedDB: IDBFactory,
+  IDBKeyRange: IDBKeyRange,
+};
+
+declare export var crypto: any;
+declare export var idb: IDB;
