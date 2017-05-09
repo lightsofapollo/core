@@ -1,6 +1,11 @@
+/* @flow */
 import * as Crypto from '../src/Crypto';
 
 describe('Crypto', () => {
+
+  function hex(input) {
+    return new Buffer(input).toString('hex');
+  }
 
   describe('pbkdf2', () => {
     const common = { iterations: 5, salt: 'salt', };
@@ -17,12 +22,22 @@ describe('Crypto', () => {
           Crypto.pbkdf2(pass, opt),
           Crypto.pbkdf2(pass, opt),
         ]);
-        expect(one.toString('hex')).toBe(two.toString('hex'));
-
+        expect(hex(one)).toBe(hex(two));
         const bytes = parseInt(opt.hash.replace('SHA-', ''), 10);
-        expect(one.length).toBe(bytes);
+        expect(one.byteLength).toBe(bytes);
       });
     }
+  });
+
+  describe('encrypt/decrypt', () => {
+    it('should work in/out', async () => {
+      const text = 'foo';
+      const pass = 'password';
+
+      const enc = await Crypto.encrypt(text, pass);
+      const dec = await Crypto.decrypt(enc, pass);
+      expect(dec).toBe(text);
+    });
   });
 
 });
