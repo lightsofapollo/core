@@ -1,6 +1,7 @@
 /* @noflow */
-const { resolve } = require('path');
+const { resolve, } = require('path');
 const webpack = require('webpack');
+const RelayCompilerWebpackPlugin = require('relay-compiler-webpack-plugin');
 
 module.exports = {
   context: resolve(__dirname, 'src'),
@@ -17,7 +18,7 @@ module.exports = {
     // bundle the client for hot reloading
     // only- means to only hot reload for successful updates
 
-    './index.js'
+    './index.js',
     // the entry point of our app
   ],
   output: {
@@ -26,7 +27,7 @@ module.exports = {
 
     path: resolve(__dirname, 'dist'),
 
-    publicPath: '/'
+    publicPath: '/',
     // necessary for HMR to know where to load the hot update chunks
   },
 
@@ -39,7 +40,7 @@ module.exports = {
     contentBase: resolve(__dirname, 'dist'),
     // match the output path
 
-    publicPath: '/'
+    publicPath: '/',
     // match the output `publicPath`
   },
 
@@ -48,7 +49,7 @@ module.exports = {
       {
         test: /\.js$/,
         use: [ 'babel-loader', ],
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
     ],
   },
@@ -59,5 +60,9 @@ module.exports = {
 
     new webpack.NamedModulesPlugin(),
     // prints more readable module names in the browser console on HMR updates
+    new RelayCompilerWebpackPlugin({
+      schema: resolve(__dirname, 'github-graphql-schema.json'),
+      src: resolve(__dirname, 'src'),
+    }),
   ],
 };
