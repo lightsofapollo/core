@@ -2,7 +2,7 @@
   "name": "core-web",
   "private": true,
   "browser": {
-    "./src/idb.js": "./src/idb.browser.js"
+    "./src/web.js": "./src/web.browser.js"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./__tests__/setup.js",
