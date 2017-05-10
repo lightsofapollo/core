@@ -13,7 +13,7 @@ type PBKDF2Opts = {
   +hash: 'SHA-256' | 'SHA-384' | 'SHA-512',
 };
 
-type EncryptOut = {
+export type Encrypted = {
   +encrypted: ArrayBuffer,
   +iv: ArrayBuffer,
 };
@@ -42,7 +42,7 @@ async function sha256(input: string) {
 
 export async function encrypt(
   plaintext: string, password: string
-): Promise<EncryptOut> {
+): Promise<Encrypted> {
   const passwordHash = await sha256(password);
   /**
    * Spec states ideal IV is 12 bytes (96 bits).
@@ -61,7 +61,7 @@ export async function encrypt(
 }
 
 export async function decrypt(
-  {encrypted, iv, }: EncryptOut, password: string
+  {encrypted, iv, }: Encrypted, password: string
 ): Promise<string> {
   const passwordHash = await sha256(password);
   const alg = { name: 'AES-GCM', iv, };
