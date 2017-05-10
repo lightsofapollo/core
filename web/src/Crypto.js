@@ -14,8 +14,8 @@ type PBKDF2Opts = {
 };
 
 export type Encrypted = {
-  +encrypted: ArrayBuffer,
-  +iv: ArrayBuffer,
+  +encrypted: $TypedArray,
+  +iv: Uint8Array,
 };
 
 const HASH_TO_BIT_LENGTH = {
