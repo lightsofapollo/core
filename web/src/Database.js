@@ -2,23 +2,21 @@
  * @flow
  */
 import Dexie from 'dexie';
-import idb from './idb';
-import invariant from 'invariant';
+import { idb, } from './web';
 
 const VERSION_ONE = {
-  githubCredentials: '&id, name, createdAt, encrypted',
+  githubCredentials: '&id, name, createdAt, encryptedToken',
 }
 
-type GithubCredential = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  encrypted: {
-    token: string;
-    salt: string;
-    iterations: number;
-  };
-}
+export type GithubCredential = {
+  id: string,
+  name: string,
+  createdAt: Date,
+  encryptedToken: {
+    iv: $TypedArray,
+    encrypted: $TypedArray,
+  },
+};
 
 /**
  * Central module for handling all database logic and opeartions.
@@ -46,20 +44,19 @@ class Database {
   }
 
   insertGithuCredential(cred: GithubCredential) {
-    const {githubCredentials} = this.db;
+    const {githubCredentials, } = this.db;
     return githubCredentials.add(cred);
   }
 
   deleteGithubCredential(cred: GithubCredential | string) {
-    const {githubCredentials} = this.db;
+    const {githubCredentials, } = this.db;
     if (typeof cred === 'string') {
       return githubCredentials.delete(cred);
     }
     return this.deleteGithubCredential(cred.id);
   }
-
 }
 
-export default function openDatabase(name): Data {
+export default function openDatabase(name: string): Database {
   return new Database(name);
 }

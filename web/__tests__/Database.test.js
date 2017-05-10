@@ -1,5 +1,5 @@
 /* @flow */
-import openDatabase from '../src/database';
+import openDatabase from '../src/Database';
 import uuid from 'uuid';
 
 describe('openDatabase', () => {
@@ -9,11 +9,10 @@ describe('openDatabase', () => {
       id: uuid.v4(),
       name: uuid.v1(),
       createdAt: new Date(),
-      encrypted: {
-        token: 'bla',
-        salt: 'bla',
-        iterations: 1,
-      }
+      encryptedToken: {
+        iv: new Uint8Array(12),
+        encrypted: new Uint8Array(17),
+      },
     };
   }
 
@@ -30,7 +29,7 @@ describe('openDatabase', () => {
     });
 
     it('should return inserted items', async () => {
-      const creds = [credFactory(), credFactory()];
+      const creds = [credFactory(), credFactory(),];
       await Promise.all(creds.map((cred) => {
         return database.insertGithuCredential(cred);
       }));
