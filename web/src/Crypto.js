@@ -5,17 +5,26 @@
  */
 
 import { crypto, TextEncoder, TextDecoder, } from './web';
+import type { BufferSource, } from './web';
+
 const subtle = crypto.subtle;
 
+type PBKDF2HashOpts = 'SHA-256' | 'SHA-384' | 'SHA-512';
+
 type PBKDF2Opts = {
-  +salt: string,
+  +salt: $ArrayBufferView,
   +iterations: number,
-  +hash: 'SHA-256' | 'SHA-384' | 'SHA-512',
+  +hash: PBKDF2HashOpts,
 };
 
 export type Encrypted = {
-  +encrypted: $TypedArray,
-  +iv: Uint8Array,
+  +encrypted: ArrayBuffer,
+  +iv: $ArrayBufferView,
+};
+
+export type PBKDFResult = {
+  passwordHash: ArrayBuffer,
+  options: PBKDF2Opts,
 };
 
 const HASH_TO_BIT_LENGTH = {
@@ -24,14 +33,12 @@ const HASH_TO_BIT_LENGTH = {
   'SHA-512': 512 << 3,
 };
 
-function encode(input: string): ArrayBuffer {
-  // $FlowFixMe: Bug says constructor cannot be called.
+function encode(input: string): Uint8Array {
   const enc = new TextEncoder();
   return enc.encode(input);
 }
 
-function decode(input: ArrayBuffer): string {
-  // $FlowFixMe: Bug says constructor cannot be called.
+function decode(input: BufferSource): string {
   const decode = new TextDecoder();
   return decode.decode(input);
 }
@@ -72,25 +79,51 @@ export async function decrypt(
   return decode(decryptBuffer);
 }
 
+export const DEFAULT_PBKDF2_ITERATIONS = 10000;
+
+function generateSalt(bytes = 8): $ArrayBufferView {
+  const arr = new Uint8Array(bytes);
+  crypto.getRandomValues(arr);
+  return arr;
+}
+
+
 export async function pbkdf2(
-  password: string, options: PBKDF2Opts
-): Promise<ArrayBuffer> {
-  const {salt, iterations, hash, } = options;
+  password: string,
+  options: {
+    salt?: $ArrayBufferView,
+    hash?: PBKDF2HashOpts,
+    iterations?: number,
+  },
+): Promise<PBKDFResult> {
+  const salt = options.salt || generateSalt();
+  const hash = options.hash || 'SHA-512';
+  const iterations = options.iterations || DEFAULT_PBKDF2_ITERATIONS;
+
+  // const {salt, iterations, hash, } = options;
   const key = await subtle.importKey(
     'raw',
     encode(password),
-    { name: 'PBKDF2', },
+    'PBKDF2',
     false,
     ['deriveBits', ],
   );
 
   const bitLength = HASH_TO_BIT_LENGTH[hash];
-  return subtle.deriveBits({
+  const passwordHash = await subtle.deriveBits({
     name: 'PBKDF2',
-    salt: encode(salt),
+    salt: salt,
     iterations,
-    hash: {
-      name: hash,
-    },
+    hash,
   }, key, bitLength);
+
+  return {
+    passwordHash,
+    options: {
+      iterations,
+      salt,
+      hash,
+    },
+  };
+
 }

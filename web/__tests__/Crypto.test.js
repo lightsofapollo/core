@@ -1,5 +1,7 @@
 /* @flow */
+import invariant from 'assert';
 import * as Crypto from '../src/Crypto';
+import { crypto, } from '../src/web';
 
 describe('Crypto', () => {
 
@@ -8,7 +10,10 @@ describe('Crypto', () => {
   }
 
   describe('pbkdf2', () => {
-    const common = { iterations: 5, salt: 'salt', };
+    const common = {
+      iterations: 5,
+      salt: crypto.getRandomValues(new Uint8Array(16)),
+    };
     const options = [
       { hash: 'SHA-256', ...common, },
       { hash: 'SHA-384', ...common, },
@@ -22,9 +27,15 @@ describe('Crypto', () => {
           Crypto.pbkdf2(pass, opt),
           Crypto.pbkdf2(pass, opt),
         ]);
-        expect(hex(one)).toBe(hex(two));
+
+        const {passwordHash: oneHash, options: oneOpts, } = one;
+        const {passwordHash: twoHash, options: twoOpts, } = two;
+
+        expect(hex(oneHash)).toBe(hex(twoHash));
+        expect(oneOpts).toEqual(twoOpts);
+        invariant(opt.hash);
         const bytes = parseInt(opt.hash.replace('SHA-', ''), 10);
-        expect(one.byteLength).toBe(bytes);
+        expect(oneHash.byteLength).toBe(bytes);
       });
     }
   });
