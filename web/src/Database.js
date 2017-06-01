@@ -4,7 +4,7 @@
 import Dexie from 'dexie';
 import { idb, } from './web';
 
-import type { Encrypted, } from './Crypto';
+import type { Encrypted, PasswordOptions, } from './Crypto';
 
 const VERSION_ONE = {
   githubCredentials: '&id, name, createdAt, encryptedToken',
@@ -15,6 +15,7 @@ export type GithubCredential = {
   +name: string,
   +createdAt: Date,
   +encryptedToken: Encrypted,
+  +passwordOptions: PasswordOptions,
 };
 
 /**

@@ -4,18 +4,25 @@
  * @flow
  */
 
+import invariant from 'assert';
 import { crypto, TextEncoder, TextDecoder, } from './web';
-import type { BufferSource, } from './web';
+import type { BufferSource, HashAlgorithm, } from './web';
 
 const subtle = crypto.subtle;
-
-type PBKDF2HashOpts = 'SHA-256' | 'SHA-384' | 'SHA-512';
 
 type PBKDF2Opts = {
   +salt: $ArrayBufferView,
   +iterations: number,
-  +hash: PBKDF2HashOpts,
+  +hash: HashAlgorithm,
 };
+
+export type PasswordOptions = PBKDF2Opts;
+
+type PBKDF2InputOpts = {
+  +salt?: $ArrayBufferView,
+  +iterations?: number,
+  +hash?: HashAlgorithm,
+}
 
 export type Encrypted = {
   +encrypted: ArrayBuffer,
@@ -23,7 +30,7 @@ export type Encrypted = {
 };
 
 export type PBKDFResult = {
-  passwordHash: ArrayBuffer,
+  hash: ArrayBuffer,
   options: PBKDF2Opts,
 };
 
@@ -43,14 +50,32 @@ function decode(input: BufferSource): string {
   return decode.decode(input);
 }
 
-async function sha256(input: string) {
-  return crypto.subtle.digest('SHA-256', encode(input));
+async function sha256(input: string | BufferSource) {
+  if (typeof input === 'string') {
+    input = encode(input);
+  }
+  return crypto.subtle.digest('SHA-256', input);
 }
 
+/**
+ * Domain specific encrypt function.
+ *
+ * The input password is hashed using PBKDF2 and then hashed again using sha256
+ * for sizing.
+ *
+ */
 export async function encrypt(
-  plaintext: string, password: string
-): Promise<Encrypted> {
-  const passwordHash = await sha256(password);
+  plaintext: string,
+  pbkdf2Opts: PBKDF2InputOpts,
+  password: string
+): Promise<{
+  encrypted: Encrypted,
+  passwordOptions: PBKDF2Opts,
+}> {
+  const {hash: passwordHash, options: passwordOptions, } =
+    await pbkdf2(password, pbkdf2Opts);
+
+  const passwordKeyContent = await sha256(passwordHash);
   /**
    * Spec states ideal IV is 12 bytes (96 bits).
    * @see http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf
@@ -58,22 +83,29 @@ export async function encrypt(
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const alg = { name: 'AES-GCM', iv, };
   const key = await subtle.importKey(
-    'raw', passwordHash, alg, false, ['encrypt', ]
+    'raw', passwordKeyContent, alg, false, ['encrypt', ]
   );
   const encryptedText = await subtle.encrypt(alg, key, encode(plaintext));
+
   return {
-    iv,
-    encrypted: encryptedText,
+    encrypted: {
+      iv,
+      encrypted: encryptedText,
+    },
+    passwordOptions,
   };
 }
 
 export async function decrypt(
-  {encrypted, iv, }: Encrypted, password: string
+  {encrypted, iv, }: Encrypted,
+  passwordOptions: PBKDF2Opts,
+  password: string
 ): Promise<string> {
-  const passwordHash = await sha256(password);
+  const {hash, } = await pbkdf2(password, passwordOptions);
+  const keyContent = await sha256(hash);
   const alg = { name: 'AES-GCM', iv, };
   const key = await subtle.importKey(
-    'raw', passwordHash, alg, false, ['decrypt', ]
+    'raw', keyContent, alg, false, ['decrypt', ]
   );
   const decryptBuffer = await subtle.decrypt(alg, key, encrypted);
   return decode(decryptBuffer);
@@ -90,15 +122,12 @@ function generateSalt(bytes = 8): $ArrayBufferView {
 
 export async function pbkdf2(
   password: string,
-  options: {
-    salt?: $ArrayBufferView,
-    hash?: PBKDF2HashOpts,
-    iterations?: number,
-  },
+  options: PBKDF2InputOpts,
 ): Promise<PBKDFResult> {
   const salt = options.salt || generateSalt();
   const hash = options.hash || 'SHA-512';
   const iterations = options.iterations || DEFAULT_PBKDF2_ITERATIONS;
+  invariant(hash !== 'SHA-1', 'Use a different hashing function');
 
   // const {salt, iterations, hash, } = options;
   const key = await subtle.importKey(
@@ -118,7 +147,7 @@ export async function pbkdf2(
   }, key, bitLength);
 
   return {
-    passwordHash,
+    hash: passwordHash,
     options: {
       iterations,
       salt,

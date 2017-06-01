@@ -1,17 +1,23 @@
 /* @flow */
 import openDatabase from '../src/Database';
 import uuid from 'uuid';
+import type { GithubCredential, } from '../src/Database';
 
 describe('openDatabase', () => {
 
-  function credFactory() {
+  function credFactory(): GithubCredential {
     return {
       id: uuid.v4(),
       name: uuid.v1(),
       createdAt: new Date(),
       encryptedToken: {
         iv: new Uint8Array(12),
-        encrypted: new Uint8Array(17),
+        encrypted: new Uint8Array(17).buffer,
+      },
+      passwordOptions: {
+        iterations: 1,
+        hash: 'SHA-256',
+        salt: new Uint8Array(16),
       },
     };
   }

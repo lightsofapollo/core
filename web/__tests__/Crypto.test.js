@@ -28,8 +28,8 @@ describe('Crypto', () => {
           Crypto.pbkdf2(pass, opt),
         ]);
 
-        const {passwordHash: oneHash, options: oneOpts, } = one;
-        const {passwordHash: twoHash, options: twoOpts, } = two;
+        const {hash: oneHash, options: oneOpts, } = one;
+        const {hash: twoHash, options: twoOpts, } = two;
 
         expect(hex(oneHash)).toBe(hex(twoHash));
         expect(oneOpts).toEqual(twoOpts);
@@ -45,8 +45,8 @@ describe('Crypto', () => {
       const text = 'foo';
       const pass = 'password';
 
-      const enc = await Crypto.encrypt(text, pass);
-      const dec = await Crypto.decrypt(enc, pass);
+      const {encrypted: enc, passwordOptions, } = await Crypto.encrypt(text, {}, pass);
+      const dec = await Crypto.decrypt(enc, passwordOptions, pass);
       expect(dec).toBe(text);
     });
   });
