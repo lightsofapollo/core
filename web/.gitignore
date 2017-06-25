@@ -1,1 +1,3 @@
 /yarn.lock
+/src/containers/__generated__/
+/dist/bundle.js*
