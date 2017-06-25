@@ -43,17 +43,17 @@
     "relay-compiler-webpack-plugin": "^0.2.3",
     "source-map-loader": "^0.2.1",
     "text-encoding": "^0.6.4",
-    "uuid": "^3.1.0",
     "ts-jest": "^20.0.6",
     "tslint": "^5.4.3",
-    "typescript": "^2.3.4",
+    "typescript": "2.3.4",
+    "uuid": "^3.1.0",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   },
   "scripts": {
     "postinstall": "rm -rf ./node_modules/relay-compiler/node_modules/babylon",
     "flow": "flow check",
-    "lint": "eslint ."
+    "lint": "tslint **/*.ts* -e '**/node_modules/**'"
   },
   "engines": {
     "node": ">=7.7"
