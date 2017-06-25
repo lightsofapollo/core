@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 import { idb, } from './web';
 
-import { Encrypted, PasswordOptions, } from './Crypto';
+import { Encrypted, } from './Crypto';
 
 const VERSION_ONE = {
   githubCredentials: '&id, name, createdAt, encryptedToken',
@@ -49,14 +49,12 @@ class PublicApi {
   }
 
   insertGithuCredential(cred: GithubCredential) {
-    const {githubCredentials, } = this.db;
-    return githubCredentials.add(cred);
+    return this.db.githubCredentials.add(cred);
   }
 
   deleteGithubCredential(cred: GithubCredential | string): Promise<void> {
-    const {githubCredentials, } = this.db;
     if (typeof cred === 'string') {
-      return githubCredentials.delete(cred);
+      return this.db.githubCredentials.delete(cred);
     }
     return this.deleteGithubCredential(cred.id);
   }

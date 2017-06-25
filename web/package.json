@@ -13,7 +13,7 @@
     },
     "setupFiles": [],
     "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
-    "setupTestFrameworkScriptFile": "./__tests__/setup.js",
+    "setupTestFrameworkScriptFile": "./__tests__/setup.ts",
     "testMatch": ["**/__tests__/**/*.test.(ts|tsx|js)"],
     "mapCoverage": true,
     "transform": {
