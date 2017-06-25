@@ -15,14 +15,18 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.4.0",
     "babel-preset-react": "^6.24.1",
+    "babel-runtime": "^6.23.0",
     "babylon": "6.17.0",
+    "dexie": "2.0.0-beta.10",
     "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.32.1",
     "eslint-plugin-react": "^7.0.0",
     "flow-bin": "^0.44.2",
     "graphql": "^0.9.6",
+    "indexeddbshim": "^3.0.0-rc.2",
     "jest": "^19.0.2",
     "jest-runtime": "19.0.3",
+    "node-webcrypto-ossl": "^1.0.21",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-hot-loader": "next",
@@ -30,17 +34,11 @@
     "react-relay": "1.0.0-rc.3",
     "redux": "^3.6.0",
     "relay-compiler": "1.0.0-rc.3",
-    "relay-compiler-webpack-plugin": "git+ssh://git@github.com/lightsofapollo/relay-compiler-webpack-plugin#add-introspection-query-json",
+    "relay-compiler-webpack-plugin": "^0.2.3",
+    "text-encoding": "^0.6.4",
+    "uuid": "^3.1.0",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
-  },
-  "jest": {
-    "testMatch": [
-      "**/__tests__/**.test.js"
-    ],
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
   },
   "scripts": {
     "postinstall": "rm -rf ./node_modules/relay-compiler/node_modules/babylon",
