@@ -4,6 +4,7 @@
 # as new functionality is added (and different platforms...)
 
 yarn run lint
-yarn run flow
 
+pushd web
 ./node_modules/.bin/jest --coverage
+popd
