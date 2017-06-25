@@ -1,16 +1,17 @@
 /* @flow */
-import invariant from 'assert';
+
 import * as Crypto from '../src/Crypto';
 import { crypto, } from '../src/web';
 
 describe('Crypto', () => {
 
-  function hex(input) {
-    return new Buffer(input).toString('hex');
+  function hex(input: ArrayBuffer) {
+    return Buffer.from(input).toString('hex');
   }
 
   describe('pbkdf2', () => {
     const common = {
+      name: 'pbkdf2',
       iterations: 5,
       salt: crypto.getRandomValues(new Uint8Array(16)),
     };
@@ -20,7 +21,7 @@ describe('Crypto', () => {
       { hash: 'SHA-512', ...common, },
     ];
 
-    for (let opt of options) {
+    for (const opt of options) {
       it(opt.hash, async () => {
         const pass = 'password';
         const [one, two, ] = await Promise.all([
@@ -33,7 +34,6 @@ describe('Crypto', () => {
 
         expect(hex(oneHash)).toBe(hex(twoHash));
         expect(oneOpts).toEqual(twoOpts);
-        invariant(opt.hash);
         const bytes = parseInt(opt.hash.replace('SHA-', ''), 10);
         expect(oneHash.byteLength).toBe(bytes);
       });
@@ -42,10 +42,17 @@ describe('Crypto', () => {
 
   describe('encrypt/decrypt', () => {
     it('should work in/out', async () => {
+      const pbkdf2 = {
+        name: 'pbkdf2',
+        hash: 'SHA-256',
+        iterations: 5,
+        salt: crypto.getRandomValues(new Uint8Array(16)),
+      };
+
       const text = 'foo';
       const pass = 'password';
 
-      const {encrypted: enc, passwordOptions, } = await Crypto.encrypt(text, {}, pass);
+      const {encrypted: enc, passwordOptions, } = await Crypto.encrypt(text, pbkdf2, pass);
       const dec = await Crypto.decrypt(enc, passwordOptions, pass);
       expect(dec).toBe(text);
     });

@@ -1,19 +1,19 @@
 /**
  * @flow
  */
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
-import { encrypt, decrypt, } from '../Crypto'
+import { decrypt, encrypt, } from '../Crypto';
 // For now the database holds the canoncial type.
-import type { GithubCredential, } from '../Database';
-import type { PasswordOptions, } from '../Crypto';
+import { PasswordOptions, } from '../Crypto';
+import { GithubCredential, } from '../Database';
 
-type CreateOptions = {
-  +name: string;
-  +password: string;
-  +tokenToEncrypt: string;
-  +passwordOptions?: PasswordOptions;
-};
+interface CreateOptions {
+  readonly name: string;
+  readonly password: string;
+  readonly tokenToEncrypt: string;
+  readonly passwordOptions?: PasswordOptions;
+}
 
 export async function create({
   name,
@@ -31,9 +31,9 @@ export async function create({
     id,
     name,
     createdAt: new Date(),
-    encryptedToken: encryptedToken,
+    encryptedToken,
     passwordOptions: passwordOptionsResult,
-  }
+  };
 }
 
 export async function decryptToken(

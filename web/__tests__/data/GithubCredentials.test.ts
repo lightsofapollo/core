@@ -1,4 +1,3 @@
-/* @flow */
 import * as GithubCredentials from '../../src/data/GithubCredentials';
 
 describe('GithubCredentials', () => {
