@@ -1,0 +1,90 @@
+/**
+ * @flow
+ */
+
+type IDB = {
+  indexedDB: IDBFactory,
+  IDBKeyRange: IDBKeyRange,
+};
+
+export type BufferSource = ArrayBuffer | $ArrayBufferView;
+
+export type HashAlgorithm =
+  'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
+
+export type CryptoKeyUsages =
+  'encrypt' | 'decrypt' | 'sign' | 'verify' |
+  'deriveKey' | 'deriveBits' | 'wrapKey' | 'unwrapKey';
+
+export interface PBKDF2Params {
+  name: "PBKDF2",
+  salt: BufferSource,
+  iterations: number,
+  hash: HashAlgorithm,
+};
+
+declare class CryptoKey {
+  type: 'secret' | 'public' | 'private';
+  extractable: boolean;
+  algorithm: string;
+  usages: Array<CryptoKeyUsages>;
+}
+
+type CryptoAlgorithm = string | {
+  name: string,
+  iv?: BufferSource,
+};
+
+// Minimal implementation only typing what is used.
+declare class CryptoSubtle {
+  digest(
+    algo: HashAlgorithm,
+    data: BufferSource,
+  ): Promise<ArrayBuffer>;
+
+  importKey(
+    format: 'raw',
+    key: BufferSource,
+    algo: CryptoAlgorithm,
+    extractable: boolean,
+    usages: Array<CryptoKeyUsages>,
+  ): CryptoKey;
+
+  encrypt(
+    algo: CryptoAlgorithm,
+    key: CryptoKey,
+    data: BufferSource,
+  ): Promise<ArrayBuffer>;
+
+  decrypt(
+    algo: CryptoAlgorithm,
+    key: CryptoKey,
+    data: BufferSource,
+  ): Promise<ArrayBuffer>;
+
+  deriveBits(
+    algo: PBKDF2Params,
+    key: CryptoKey,
+    bitLength: number
+  ): Promise<ArrayBuffer>;
+};
+
+declare class Crypto {
+  getRandomValues(arr: $TypedArray): $TypedArray;
+  subtle: CryptoSubtle;
+};
+
+// Simplified TextDecoder to fix a flow bug
+// https://github.com/facebook/flow/pull/4071
+declare class MyTextDecoder {
+  constructor(encoding?: TextDecoder$availableEncodings, options?: { fatal: bool }): TextDecoder;
+  encoding: TextDecoder$availableEncodings;
+  fatal: bool;
+  ignoreBOM: bool;
+  decode(buffer?: ArrayBuffer | $ArrayBufferView, options?: { stream: bool }): string;
+}
+
+declare export var crypto: Crypto;
+declare export var idb: IDB;
+declare export var TextEncoder: typeof TextEncoder;
+declare export var TextDecoder: typeof MyTextDecoder;

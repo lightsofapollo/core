@@ -1,6 +1,26 @@
 {
   "name": "core-web",
+  "version": "1.0.0",
   "private": true,
+  "browser": {
+    "./src/web.js": "./src/web.browser.js"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "skipBabel": true
+      }
+    },
+    "setupFiles": [],
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
+    "setupTestFrameworkScriptFile": "./__tests__/setup.js",
+    "testMatch": ["**/__tests__/**/*.test.(ts|tsx|js)"],
+    "mapCoverage": true,
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.tsx?$": "ts-jest/preprocessor"
+    }
+  },
   "scripts": {
     "install": "cd ../ && yarn",
     "start": "webpack-dev-server"
