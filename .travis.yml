@@ -2,6 +2,24 @@ language: node_js
 node_js:
   - "7"
 
+env:
+  - CXX=clang
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+    packages:
+      - g++-4.8
+      - llvm-3.6
+      - libstdc++-4.9-dev
+      - llvm-3.6-dev
+      - clang-3.6
+
+compiler: clang
+sudo: false
+
 # Yarn wants us to use apt-get but it's easier to use npm for traivs ...
 before_script: ""
 script: ./ci.sh
