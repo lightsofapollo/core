@@ -1,7 +1,6 @@
 /* @noflow */
 const { resolve, } = require('path');
 const webpack = require('webpack');
-const RelayCompilerWebpackPlugin = require('relay-compiler-webpack-plugin');
 
 module.exports = {
   context: resolve(__dirname, 'src'),
@@ -68,11 +67,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     // enable HMR globally
 
-    new webpack.NamedModulesPlugin(),
     // prints more readable module names in the browser console on HMR updates
-    new RelayCompilerWebpackPlugin({
-      schema: resolve(__dirname, 'github-graphql-schema.json'),
-      src: resolve(__dirname, 'src'),
-    }),
+    new webpack.NamedModulesPlugin(),
   ],
 };

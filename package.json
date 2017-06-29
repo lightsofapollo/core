@@ -21,7 +21,6 @@
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0",
-    "babel-plugin-relay": "1.0.1-rc.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.4.0",
@@ -44,12 +43,9 @@
     "react-dom": "^15.5.4",
     "react-hot-loader": "next",
     "react-redux": "^5.0.4",
-    "react-relay": "1.0.0-rc.3",
     "react-router-dom": "^4.1.1",
     "redux": "reactjs/redux#0de7e5bf8f451359d4ad84cdd310cac358419c24",
     "redux-saga": "^0.15.4",
-    "relay-compiler": "1.0.0-rc.3",
-    "relay-compiler-webpack-plugin": "^0.2.3",
     "source-map-loader": "^0.2.1",
     "text-encoding": "^0.6.4",
     "ts-jest": "^20.0.6",
@@ -60,7 +56,6 @@
     "webpack-dev-server": "^2.4.2"
   },
   "scripts": {
-    "postinstall": "rm -rf ./node_modules/relay-compiler/node_modules/babylon",
     "lint": "tslint --type-check -p ."
   },
   "engines": {
