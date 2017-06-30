@@ -20,6 +20,7 @@ import {
   Actions,
   State,
   UserState,
+  AUTH_PATH,
 } from './ReduxTypes';
 
 const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql';
@@ -44,8 +45,9 @@ export default function(state = {}): ReduxStore<State> {
     networkInterface,
   });
 
+  // TODO: Rehydrate from a previous state.
   const initialState: State = {
-    // User state may be overwritten.
+    authRoute: AUTH_PATH,
     userState: UserState.NeedsSignup,
     ...state,
     // apollo may _not_ be overrwriten.
@@ -59,7 +61,7 @@ export default function(state = {}): ReduxStore<State> {
 
   const store: ReduxStore<State> = createStore<State>(
     combineReducers<State>({
-      // ...reducers,
+      ...reducers,
       apollo: apollo.reducer(),
     }),
     initialState,

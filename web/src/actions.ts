@@ -12,3 +12,10 @@ export function setGithubToken(token: string): Actions {
     token,
   };
 }
+
+export function createUser(password: string): Actions {
+  return {
+    type: 'CREATE_USER',
+    password,
+  };
+}
