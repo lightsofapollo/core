@@ -1,7 +1,6 @@
 /* @noflow */
 const { resolve, } = require('path');
 const webpack = require('webpack');
-const RelayCompilerWebpackPlugin = require('relay-compiler-webpack-plugin');
 
 module.exports = {
   context: resolve(__dirname, 'src'),
@@ -56,11 +55,19 @@ module.exports = {
         use: ['babel-loader'],
         exclude: /node_modules/,
       },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader",
+        exclude: [
+          /node_modules\/apollo-client/
+        ]
+      },
     ],
   },
 
   resolve: {
+    mainFields: ['module', 'js:next', 'browser', 'main'],
     extensions: ['.ts', '.tsx', '.jsx', '.js'],
   },
 
@@ -68,11 +75,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     // enable HMR globally
 
-    new webpack.NamedModulesPlugin(),
     // prints more readable module names in the browser console on HMR updates
-    new RelayCompilerWebpackPlugin({
-      schema: resolve(__dirname, 'github-graphql-schema.json'),
-      src: resolve(__dirname, 'src'),
-    }),
+    new webpack.NamedModulesPlugin(),
   ],
 };

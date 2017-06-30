@@ -2,12 +2,38 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import App from './components/App';
+import {
+  HashRouter,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import { ApolloProvider } from 'react-apollo';
+
+import AuthRoute from './containers/AuthRoute';
+import EnterCredentials from './containers/EnterCredentials';
+import createStore from './ReduxStore';
+import { connect } from 'react-redux';
+
+const store = createStore();
+const {apollo, authRoute} = store.getState();
+
+const App = () => {
+  return <p>Fo</p>;
+}
 
 function updateUI() {
   const app = (
     <AppContainer>
-      <App message="sup" />
+      <ApolloProvider client={apollo} store={store}>
+        <HashRouter>
+          <Switch>
+            <AuthRoute exact path='/' component={App} />
+            <Route path={authRoute}>
+              <EnterCredentials />
+            </Route>
+          </Switch>
+        </HashRouter>
+      </ApolloProvider>
     </AppContainer>
   );
   render(app, document.getElementById('root'));
